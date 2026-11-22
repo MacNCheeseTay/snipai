@@ -27,13 +27,23 @@ class Fake:
 
 
 c = Fake(dead={"gemini-3.8-flash", "gemini-3.7-flash"})
+import os, tempfile
+models.SAVED = os.path.join(tempfile.mkdtemp(), ".last_model")
+models._chain = []
 assert models.flash_models(c, "gemini-3.8-flash") == [
     "gemini-3.8-flash", "gemini-3.7-flash", "gemini-2.5-flash", "gemini-3.5-flash-lite"], models.flash_models(c, "gemini-3.8-flash")
 got = []
 models.answer(c, "gemini-3.8-flash", b"x", "p", got.append)
 assert got[-1] == "ok gemini-2.5-flash" and c.tried == ["gemini-3.8-flash", "gemini-3.7-flash", "gemini-2.5-flash"], (got, c.tried)
 
+c.tried.clear()
+models.answer(c, "gemini-3.8-flash", b"x", "p", got.append)
+assert c.tried == ["gemini-2.5-flash"], c.tried  # remembers the working model, no re-probing
+models._chain = []
+assert open(models.SAVED).read() == "gemini-2.5-flash"
+
 bad = Fake(dead=set())
+models._chain = []
 bad.generate_content_stream = lambda model, contents: (_ for _ in ()).throw(RuntimeError("400 API key not valid"))
 got = []
 models.answer(bad, "gemini-3.8-flash", b"x", "p", got.append)
