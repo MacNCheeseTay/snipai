@@ -3,7 +3,7 @@ import os, re, time
 from google.genai import types
 
 SKIP = ("image", "tts", "live", "audio", "embedding", "robotics", "computer")
-STATIC = ["gemini-3.8-flash", "gemini-3.7-flash", "gemini-3.5-flash", "gemini-3-flash-preview", "gemini-2.5-flash"]
+STATIC = ["gemini-3.8-flash", "gemini-3.7-flash", "gemini-3.5-flash", "gemini-3-flash-preview"]
 RETRYABLE = ("503", "429", "UNAVAILABLE", "RESOURCE_EXHAUSTED", "timed out", "Timeout")
 TIMEOUT_MS = 8000  # per request, so a hung model can't freeze the app
 
@@ -25,8 +25,14 @@ def flash_models(client, first):
                  and not any(s in m.name for s in SKIP)]
     except Exception:
         names = []
-    names = sorted(set(names or STATIC), key=lambda n: ("lite" in n, [-int(x) for x in re.findall(r"\d+", n)]))
-    return [first] + [n for n in names if n != first]
+    names = sorted({n for n in names or STATIC if gen3(n)}, key=lambda n: ("lite" in n, [-int(x) for x in re.findall(r"\d+", n)]))
+    return ([first] if gen3(first) else []) + [n for n in names if n != first]
+
+
+def gen3(name):
+    """Gemini 3 or newer only: older models are closed to new users and just waste a request."""
+    v = re.findall(r"\d+", name)
+    return not v or int(v[0]) >= 3
 
 
 _chain = []

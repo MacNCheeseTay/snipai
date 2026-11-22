@@ -31,16 +31,17 @@ import os, tempfile
 models.SAVED = os.path.join(tempfile.mkdtemp(), ".last_model")
 models._chain = []
 assert models.flash_models(c, "gemini-3.8-flash") == [
-    "gemini-3.8-flash", "gemini-3.7-flash", "gemini-2.5-flash", "gemini-3.5-flash-lite"], models.flash_models(c, "gemini-3.8-flash")
+    "gemini-3.8-flash", "gemini-3.7-flash", "gemini-3.5-flash-lite"], models.flash_models(c, "gemini-3.8-flash")
+assert "gemini-2.5-flash" not in models.flash_models(c, "gemini-2.5-flash")  # old saved model ignored
 got = []
 models.answer(c, "gemini-3.8-flash", b"x", "p", got.append)
-assert got[-1] == "ok gemini-2.5-flash" and c.tried == ["gemini-3.8-flash", "gemini-3.7-flash", "gemini-2.5-flash"], (got, c.tried)
+assert got[-1] == "ok gemini-3.5-flash-lite" and "gemini-2.5-flash" not in c.tried, (got, c.tried)
 
 c.tried.clear()
 models.answer(c, "gemini-3.8-flash", b"x", "p", got.append)
-assert c.tried == ["gemini-2.5-flash"], c.tried  # remembers the working model, no re-probing
+assert c.tried == ["gemini-3.5-flash-lite"], c.tried  # remembers the working model, no re-probing
 models._chain = []
-assert open(models.SAVED).read() == "gemini-2.5-flash"
+assert open(models.SAVED).read() == "gemini-3.5-flash-lite"
 
 bad = Fake(dead=set())
 models._chain = []
