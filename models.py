@@ -5,7 +5,7 @@ from google.genai import types
 SKIP = ("image", "tts", "live", "audio", "embedding", "robotics", "computer")
 STATIC = ["gemini-3.8-flash", "gemini-3.7-flash", "gemini-3.5-flash", "gemini-3-flash-preview"]
 RETRYABLE = ("503", "429", "UNAVAILABLE", "RESOURCE_EXHAUSTED", "timed out", "Timeout")
-TIMEOUT_MS = 8000  # per request, so a hung model can't freeze the app
+TIMEOUT_MS = 15000  # per request, so a hung model can't freeze the app. Gemini rejects anything under 10s.
 
 
 SAVED = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".last_model")
