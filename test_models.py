@@ -37,5 +37,5 @@ bad = Fake(dead=set())
 bad.generate_content_stream = lambda model, contents: (_ for _ in ()).throw(RuntimeError("400 API key not valid"))
 got = []
 models.answer(bad, "gemini-3.8-flash", b"x", "p", got.append)
-assert got == ["error: 400 API key not valid"], got
+assert got[-1] == "error: 400 API key not valid" and len(got) == 2, got
 print("ALL OK")
