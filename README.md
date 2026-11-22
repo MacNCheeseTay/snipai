@@ -31,6 +31,6 @@ curl -fsSL https://raw.githubusercontent.com/MacNCheeseTay/snipai/main/install.s
 3. Double-click **SnipAI Start** on your Desktop to turn it on, **SnipAI Stop** to shut it down completely. (If macOS blocks it the first time: right-click, Open.)
 4. First start: allow Screen Recording and Accessibility for Terminal in System Settings > Privacy & Security.
 
-Hotkeys are Ctrl+Opt+A / S / H / Q. Snip uses the native macOS region picker.
+Hotkeys are Ctrl+Opt+Cmd+A / S / H / Q (hold Control, Option and Command together). Snip uses the native macOS region picker.
 
 Do not use it where exam or interview rules prohibit outside help.

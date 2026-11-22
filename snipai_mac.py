@@ -1,7 +1,7 @@
 """macOS: hotkey screenshot/snip -> Gemini -> answer in a hidden-from-capture overlay.
 
-Ctrl+Opt+A  full screen    Ctrl+Opt+S  snip region
-Ctrl+Opt+H  hide overlay   Ctrl+Opt+Q  quit
+Ctrl+Opt+Cmd+A  full screen    Ctrl+Opt+Cmd+S  snip region
+Ctrl+Opt+Cmd+H  hide overlay   Ctrl+Opt+Cmd+Q  quit
 Needs GEMINI_API_KEY, plus Screen Recording and Accessibility permission for your terminal.
 """
 import io, os, queue, subprocess, tempfile, threading, tkinter as tk
@@ -16,6 +16,27 @@ PROMPT = "Answer the question or solve the problem shown in this image. Be as br
 
 events: queue.Queue = queue.Queue()
 client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
+
+
+VKS = {0: "full", 1: "snip", 4: "hide", 12: "quit"}  # macOS key codes for A S H Q
+held = set()
+
+
+def mod(k):
+    n = getattr(k, "name", "") or ""
+    return next((m for m in ("ctrl", "alt", "cmd") if n.startswith(m)), None)
+
+
+def on_press(k):
+    m = mod(k)
+    if m:
+        held.add(m)
+    elif held >= {"ctrl", "alt", "cmd"} and getattr(k, "vk", None) in VKS:
+        events.put(VKS[k.vk])
+
+
+def on_release(k):
+    held.discard(mod(k))
 
 
 def grab(snip):
@@ -54,12 +75,7 @@ class App:
         self.ov.geometry(f"+{self.root.winfo_screenwidth() - 450}+40")
         self.ov.withdraw()
         self.busy = False
-        keyboard.GlobalHotKeys({
-            "<ctrl>+<alt>+a": lambda: events.put("full"),
-            "<ctrl>+<alt>+s": lambda: events.put("snip"),
-            "<ctrl>+<alt>+h": lambda: events.put("hide"),
-            "<ctrl>+<alt>+q": lambda: events.put("quit"),
-        }).start()
+        keyboard.Listener(on_press=on_press, on_release=on_release).start()
         self.root.after(50, self.poll)
 
     def poll(self):
