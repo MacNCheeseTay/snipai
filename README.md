@@ -17,13 +17,19 @@ Hotkey screenshot or snip, sent to Gemini, answer shown in a small overlay that 
 
 `SNIPAI_MODEL` overrides the model (default `gemini-2.5-flash`). `py test_snipai.py` runs a smoke test of hotkeys, capture, and snip with the API call mocked.
 
-Windows: run.bat. macOS: run.command (untested, written without a Mac; see below).
+Windows: `run.bat`. macOS: see below (untested, written without a Mac).
 
 ## macOS
 
 1. Install Python 3 from python.org.
-2. Download and unzip the repo, then in Terminal run `chmod +x run.command` once and double-click it.
-3. Allow Screen Recording and Accessibility for Terminal in System Settings > Privacy & Security, then run again.
+2. Open Terminal (Cmd+Space, type Terminal) and paste:
+
+```
+curl -fsSL https://raw.githubusercontent.com/MacNCheeseTay/snipai/main/install.sh | bash
+```
+
+3. Double-click **SnipAI Start** on your Desktop to turn it on, **SnipAI Stop** to shut it down completely. (If macOS blocks it the first time: right-click, Open.)
+4. First start: allow Screen Recording and Accessibility for Terminal in System Settings > Privacy & Security.
 
 Hotkeys are Ctrl+Opt+A / S / H / Q. Snip uses the native macOS region picker.
 
