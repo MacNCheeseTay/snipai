@@ -15,7 +15,7 @@ Hotkey screenshot or snip, sent to Gemini, answer shown in a small overlay that 
 2. Download this repo (green Code button, Download ZIP) and unzip it.
 3. Double-click `run.bat`. It installs everything and asks for your free Gemini key once (aistudio.google.com/apikey).
 
-`SNIPAI_MODEL` overrides the model (default `gemini-2.5-flash`). `py test_snipai.py` runs a smoke test of hotkeys, capture, and snip with the API call mocked.
+`SNIPAI_MODEL` overrides the model (default `gemini-3.8-flash`). `py test_snipai.py` runs a smoke test of hotkeys, capture, and snip with the API call mocked.
 
 Windows: `run.bat`. macOS: see below (untested, written without a Mac).
 

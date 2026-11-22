@@ -11,7 +11,7 @@ from pynput import keyboard
 from google import genai
 from google.genai import types
 
-MODEL = os.environ.get("SNIPAI_MODEL", "gemini-2.5-flash")
+MODEL = os.environ.get("SNIPAI_MODEL", "gemini-3.8-flash")
 PROMPT = "Answer the question or solve the problem shown in this image. Be as brief as possible."
 
 events: queue.Queue = queue.Queue()

@@ -10,7 +10,7 @@ from PIL import Image, ImageGrab, ImageTk
 from google import genai
 from google.genai import types
 
-MODEL = os.environ.get("SNIPAI_MODEL", "gemini-2.5-flash")
+MODEL = os.environ.get("SNIPAI_MODEL", "gemini-3.8-flash")
 PROMPT = "Answer the question or solve the problem shown in this image. Be as brief as possible."
 MOD = 0x0002 | 0x0001 | 0x4000  # ctrl | alt | norepeat
 HOTKEYS = {1: (0x41, "full"), 2: (0x53, "snip"), 3: (0x48, "hide"), 4: (0x51, "quit")}
