@@ -4,7 +4,8 @@ from google.genai import types
 
 SKIP = ("image", "tts", "live", "audio", "embedding", "robotics", "computer")
 STATIC = ["gemini-3.8-flash", "gemini-3.7-flash", "gemini-3.5-flash", "gemini-3-flash-preview", "gemini-2.5-flash"]
-RETRYABLE = ("503", "429", "UNAVAILABLE", "RESOURCE_EXHAUSTED")
+RETRYABLE = ("503", "429", "UNAVAILABLE", "RESOURCE_EXHAUSTED", "timed out", "Timeout")
+TIMEOUT_MS = 15000  # per request, so a hung model can't freeze the app
 
 
 def flash_models(client, first):
@@ -19,11 +20,12 @@ def flash_models(client, first):
 
 
 def answer(client, first, png, prompt, show):
-    chain = flash_models(client, first)
+    chain = flash_models(client, first)[:6]
     err = ""
-    for rnd in range(3):
+    for rnd in range(2):
         for m in chain:
             out = ""
+            show(f"trying {m}...")
             try:
                 for ch in client.models.generate_content_stream(
                     model=m, contents=[types.Part.from_bytes(data=png, mime_type="image/png"), prompt]
@@ -39,8 +41,8 @@ def answer(client, first, png, prompt, show):
                 if "API key" in err or "UNAUTHENTICATED" in err:
                     show(f"error: {err}")
                     return
-        if not any(c in err for c in RETRYABLE) or rnd == 2:
+        if not any(c in err for c in RETRYABLE) or rnd == 1:
             break
-        show(f"all flash models busy, retrying ({rnd + 1}/2)...")
-        time.sleep(3 * (rnd + 1))
+        show("all flash models busy, retrying...")
+        time.sleep(3)
     show(f"error: {err}")

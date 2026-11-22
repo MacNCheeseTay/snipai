@@ -15,7 +15,7 @@ MODEL = os.environ.get("SNIPAI_MODEL", "gemini-3.8-flash")
 PROMPT = "Answer the question or solve the problem shown in this image. Be as brief as possible."
 
 events: queue.Queue = queue.Queue()
-client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
+client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"), http_options=genai.types.HttpOptions(timeout=models.TIMEOUT_MS))
 
 
 VKS = {0: "full", 1: "snip", 4: "hide", 12: "quit"}  # macOS key codes for A S H Q

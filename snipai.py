@@ -22,7 +22,7 @@ except Exception:
     pass
 
 events: queue.Queue = queue.Queue()
-client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
+client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"), http_options=genai.types.HttpOptions(timeout=models.TIMEOUT_MS))
 
 
 def hotkey_thread():
