@@ -4,7 +4,7 @@ Ctrl+Alt+A  full screen    Ctrl+Alt+S  snip region
 Ctrl+Alt+H  hide overlay   Ctrl+Alt+Q  quit
 Needs GEMINI_API_KEY. Optional SNIPAI_MODEL.
 """
-import ctypes, io, os, queue, threading, tkinter as tk
+import ctypes, io, os, queue, threading, time, tkinter as tk
 from ctypes import wintypes
 from PIL import Image, ImageGrab, ImageTk
 from google import genai
@@ -136,12 +136,20 @@ class App:
         img.convert("RGB").save(buf, "PNG")
         out = ""
         try:
-            for ch in client.models.generate_content_stream(
-                model=MODEL,
-                contents=[types.Part.from_bytes(data=buf.getvalue(), mime_type="image/png"), PROMPT],
-            ):
-                out += ch.text or ""
-                self.root.after(0, self.show, out)
+            for attempt in range(5):
+                try:
+                    for ch in client.models.generate_content_stream(
+                        model=MODEL,
+                        contents=[types.Part.from_bytes(data=buf.getvalue(), mime_type="image/png"), PROMPT],
+                    ):
+                        out += ch.text or ""
+                        self.root.after(0, self.show, out)
+                    break
+                except Exception as e:
+                    if out or attempt == 4 or not any(c in str(e) for c in ("503", "429", "UNAVAILABLE")):
+                        raise
+                    self.root.after(0, self.show, f"model busy, retrying ({attempt + 1}/4)...")
+                    time.sleep(2 * (attempt + 1))
         except Exception as e:
             self.root.after(0, self.show, f"error: {e}")
         self.busy = False
