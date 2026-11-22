@@ -11,7 +11,7 @@ Hotkey screenshot or snip, sent to Gemini, answer shown in a small overlay that 
 
 ## Install
 
-1. Install Python 3 from python.org (tick "Add python.exe to PATH").
+1. Install Python 3.11 or newer from python.org (tick "Add python.exe to PATH").
 2. Download this repo (green Code button, Download ZIP) and unzip it.
 3. Double-click `run.bat`. It installs everything and asks for your free Gemini key once (aistudio.google.com/apikey).
 
@@ -21,7 +21,7 @@ Windows: `run.bat`. macOS: see below (untested, written without a Mac).
 
 ## macOS
 
-1. Install Python 3 from python.org.
+1. Install Python 3.11 or newer from python.org (the Python that comes with macOS is too old).
 2. Open Terminal (Cmd+Space, type Terminal) and paste:
 
 ```

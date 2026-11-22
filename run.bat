@@ -1,8 +1,8 @@
 @echo off
 cd /d "%~dp0"
-py -3 --version >nul 2>&1
+py -3 -c "import sys; sys.exit(sys.version_info < (3, 11))" >nul 2>&1
 if errorlevel 1 (
-  echo Python 3 is not installed. Install it from https://www.python.org/downloads/
+  echo Python 3.11 or newer is required. Install it from https://www.python.org/downloads/
   echo Tick "Add python.exe to PATH" in the installer, then double-click run.bat again.
   pause
   exit /b 1
