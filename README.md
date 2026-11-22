@@ -27,4 +27,4 @@ Windows: run.bat. macOS: run.command (untested, written without a Mac; see below
 
 Hotkeys are Ctrl+Opt+A / S / H / Q. Snip uses the native macOS region picker.
 
-Still: Do not use it where exam or interview rules prohibit outside help.
+Do not use it where exam or interview rules prohibit outside help.
