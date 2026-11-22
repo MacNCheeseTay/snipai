@@ -4,12 +4,12 @@ Ctrl+Opt+Cmd+A  full screen    Ctrl+Opt+Cmd+S  snip region
 Ctrl+Opt+Cmd+H  hide overlay   Ctrl+Opt+Cmd+Q  quit
 Needs GEMINI_API_KEY, plus Screen Recording and Accessibility permission for your terminal.
 """
-import io, os, queue, subprocess, tempfile, threading, time, tkinter as tk
+import io, os, queue, subprocess, tempfile, threading, tkinter as tk
 from AppKit import NSApp, NSApplication
 from PIL import Image
 from pynput import keyboard
 from google import genai
-from google.genai import types
+import models
 
 MODEL = os.environ.get("SNIPAI_MODEL", "gemini-3.8-flash")
 PROMPT = "Answer the question or solve the problem shown in this image. Be as brief as possible."
@@ -112,24 +112,7 @@ class App:
     def ask(self, img):
         buf = io.BytesIO()
         img.convert("RGB").save(buf, "PNG")
-        out = ""
-        try:
-            for attempt in range(5):
-                try:
-                    for ch in client.models.generate_content_stream(
-                        model=MODEL,
-                        contents=[types.Part.from_bytes(data=buf.getvalue(), mime_type="image/png"), PROMPT],
-                    ):
-                        out += ch.text or ""
-                        self.root.after(0, self.show, out)
-                    break
-                except Exception as e:
-                    if out or attempt == 4 or not any(c in str(e) for c in ("503", "429", "UNAVAILABLE")):
-                        raise
-                    self.root.after(0, self.show, f"model busy, retrying ({attempt + 1}/4)...")
-                    time.sleep(2 * (attempt + 1))
-        except Exception as e:
-            self.root.after(0, self.show, f"error: {e}")
+        models.answer(client, MODEL, buf.getvalue(), PROMPT, lambda t: self.root.after(0, self.show, t))
         self.busy = False
 
 
