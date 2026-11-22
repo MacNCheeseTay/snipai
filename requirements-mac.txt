@@ -1,0 +1,4 @@
+google-genai
+pillow
+pynput
+pyobjc-framework-Cocoa

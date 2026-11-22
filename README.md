@@ -17,4 +17,14 @@ Hotkey screenshot or snip, sent to Gemini, answer shown in a small overlay that 
 
 `SNIPAI_MODEL` overrides the model (default `gemini-2.5-flash`). `py test_snipai.py` runs a smoke test of hotkeys, capture, and snip with the API call mocked.
 
-Windows only. Do not use it where exam or interview rules prohibit outside help.
+Windows: run.bat. macOS: run.command (untested, written without a Mac; see below).
+
+## macOS
+
+1. Install Python 3 from python.org.
+2. Download and unzip the repo, then in Terminal run `chmod +x run.command` once and double-click it.
+3. Allow Screen Recording and Accessibility for Terminal in System Settings > Privacy & Security, then run again.
+
+Hotkeys are Ctrl+Opt+A / S / H / Q. Snip uses the native macOS region picker.
+
+Still: Do not use it where exam or interview rules prohibit outside help.
